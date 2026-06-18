@@ -1,0 +1,29 @@
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--app-max);
+  height: var(--tabbar-h);
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-1);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 10;
+}
+
+.tabbar__link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--t-sm);
+  color: var(--text-2);
+}
+
+.tabbar__link.is-active {
+  color: var(--amber);
+  font-weight: 600;
+}
