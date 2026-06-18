@@ -75,6 +75,13 @@ export function KitView() {
                   <span className={styles.vialMeta}>
                     Reconstituted {formatDate(vial.reconstitutedAt)}
                   </span>
+                  <Button
+                    variant="ghost"
+                    className={styles.guide}
+                    onClick={() => navigate(`/reconstitute/guide/${vial.peptideId}`)}
+                  >
+                    Guide me
+                  </Button>
                 </div>
                 <button
                   type="button"

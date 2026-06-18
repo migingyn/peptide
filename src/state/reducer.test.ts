@@ -36,13 +36,28 @@ describe('reducer', () => {
     expect(next.hydrated).toBe(true);
   });
 
-  it('stubbed actions return state unchanged', () => {
+  it('SET_PREFS merges the partial prefs immutably', () => {
     const seeded = reducer(initialState, {
       type: 'SEED',
       payload: { peptides: PEPTIDES, protocols: PROTOCOLS, goals: GOALS },
     });
     const next = reducer(seeded, { type: 'SET_PREFS', payload: { notificationsEnabled: true } });
-    expect(next).toBe(seeded);
+    expect(next).not.toBe(seeded);
+    expect(next.prefs.notificationsEnabled).toBe(true);
+    // theme (and other prefs) are preserved
+    expect(next.prefs.theme).toBe('dark');
+    // input is not mutated
+    expect(seeded.prefs.notificationsEnabled).toBe(false);
+  });
+
+  it('SET_PREFS toggling back to false preserves other prefs', () => {
+    const on = reducer(initialState, {
+      type: 'SET_PREFS',
+      payload: { notificationsEnabled: true },
+    });
+    const off = reducer(on, { type: 'SET_PREFS', payload: { notificationsEnabled: false } });
+    expect(off.prefs.notificationsEnabled).toBe(false);
+    expect(off.prefs.theme).toBe('dark');
   });
 });
 
@@ -167,5 +182,61 @@ describe('LOG_DOSE / UNDO_DOSE', () => {
     const undone = reducer(s, { type: 'UNDO_DOSE', payload: { id: 'log-1' } });
     expect(undone.doseLogs).toHaveLength(1);
     expect(undone.doseLogs[0].id).toBe('log-2');
+  });
+});
+
+// --- Sprint 3 additions ---
+
+describe('SET_PROFILE', () => {
+  it('merges partial profile fields without clobbering others', () => {
+    const afterSex = reducer(initialState, {
+      type: 'SET_PROFILE',
+      payload: { sex: 'male' },
+    });
+    expect(afterSex.profile.sex).toBe('male');
+    expect(afterSex.profile.ageBand).toBeNull();
+
+    const afterAge = reducer(afterSex, {
+      type: 'SET_PROFILE',
+      payload: { ageBand: '30-39' },
+    });
+    expect(afterAge.profile.sex).toBe('male');
+    expect(afterAge.profile.ageBand).toBe('30-39');
+  });
+
+  it('does not mutate the input state', () => {
+    const next = reducer(initialState, { type: 'SET_PROFILE', payload: { sex: 'female' } });
+    expect(initialState.profile.sex).toBeNull();
+    expect(next).not.toBe(initialState);
+  });
+});
+
+describe('ACK_MEDICAL', () => {
+  it('sets medicalAck true', () => {
+    const next = reducer(initialState, { type: 'ACK_MEDICAL' });
+    expect(next.profile.medicalAck).toBe(true);
+  });
+  it('leaves other profile fields untouched', () => {
+    const withSex = reducer(initialState, { type: 'SET_PROFILE', payload: { sex: 'other' } });
+    const next = reducer(withSex, { type: 'ACK_MEDICAL' });
+    expect(next.profile.sex).toBe('other');
+    expect(next.profile.medicalAck).toBe(true);
+  });
+});
+
+describe('COMPLETE_ONBOARDING', () => {
+  it('sets onboardedAt to an ISO string', () => {
+    const next = reducer(initialState, { type: 'COMPLETE_ONBOARDING' });
+    expect(next.profile.onboardedAt).not.toBeNull();
+    expect(() => new Date(next.profile.onboardedAt as string).toISOString()).not.toThrow();
+    expect(new Date(next.profile.onboardedAt as string).toISOString()).toBe(
+      next.profile.onboardedAt,
+    );
+  });
+  it('is idempotent-safe: overwrites with a fresh timestamp but keeps acks', () => {
+    const acked = reducer(initialState, { type: 'ACK_MEDICAL' });
+    const next = reducer(acked, { type: 'COMPLETE_ONBOARDING' });
+    expect(next.profile.medicalAck).toBe(true);
+    expect(next.profile.onboardedAt).not.toBeNull();
   });
 });

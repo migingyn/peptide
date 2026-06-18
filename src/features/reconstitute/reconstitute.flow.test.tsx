@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { AppStateProvider } from '../../state/store';
-import { clearAll } from '../../state/persistence';
+import { clearAll, persistSlice } from '../../state/persistence';
 import App from '../../App';
 
 // Mount the full app (real store + fake-indexeddb) starting at a given route.
@@ -20,6 +20,16 @@ function mountApp(initialPath: string) {
 describe('reconstitution wedge — end-to-end (offline persistence)', () => {
   beforeEach(async () => {
     await clearAll();
+    // The onboarding gate (Sprint 3) blocks the app until onboarded. Seed an
+    // onboarded profile into idb + the localStorage fast-path so the real
+    // routes render for this end-to-end flow.
+    localStorage.setItem('peps.onboarded', '1');
+    await persistSlice('profile', {
+      sex: 'male',
+      ageBand: '30-39',
+      onboardedAt: '2026-06-17T00:00:00.000Z',
+      medicalAck: true,
+    });
   });
 
   it('reconstitutes a vial, shows it in the kit, and persists it across a reload', async () => {

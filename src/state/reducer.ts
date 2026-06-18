@@ -85,13 +85,21 @@ export function reducer(state: AppState, action: Action): AppState {
         doseLogs: state.doseLogs.filter((l) => l.id !== action.payload.id),
       };
 
-    // --- Stubs: fleshed out by later sprints. Return state unchanged so the
-    //     union compiles and exhaustiveness is satisfied today. ---
-    case 'SET_PROFILE': // Sprint 3
-    case 'ACK_MEDICAL': // Sprint 3
-    case 'COMPLETE_ONBOARDING': // Sprint 3
-    case 'SET_PREFS': // Sprint 3
-      return state;
+    // --- Sprint 3: onboarding + profile ---
+    case 'SET_PROFILE':
+      return { ...state, profile: { ...state.profile, ...action.payload } };
+
+    case 'ACK_MEDICAL':
+      return { ...state, profile: { ...state.profile, medicalAck: true } };
+
+    case 'COMPLETE_ONBOARDING':
+      return {
+        ...state,
+        profile: { ...state.profile, onboardedAt: new Date().toISOString() },
+      };
+
+    case 'SET_PREFS':
+      return { ...state, prefs: { ...state.prefs, ...action.payload } };
 
     default:
       return assertNever(action);

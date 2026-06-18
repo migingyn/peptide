@@ -65,6 +65,23 @@ export function Dashboard() {
   if (!userProtocol || !protocol) {
     return (
       <main style={{ padding: 'var(--s-4)' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button
+            type="button"
+            aria-label="Settings"
+            onClick={() => navigate('/settings')}
+            style={{
+              fontSize: 22,
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-1)',
+              cursor: 'pointer',
+              padding: 'var(--s-2)',
+            }}
+          >
+            ⚙️
+          </button>
+        </div>
         <EmptyState
           title="No active protocol"
           body="Start a protocol to see your daily doses here."
@@ -125,12 +142,27 @@ export function Dashboard() {
     >
       <header style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-4)' }}>
         <ProgressRing value={week} max={totalWeeks} label={`Week ${week}/${totalWeeks}`} />
-        <div>
+        <div style={{ flex: 1 }}>
           <h1 style={{ margin: 0, fontSize: 'var(--t-h1)', color: 'var(--text-0)' }}>
             {protocol.name}
           </h1>
           <p style={{ margin: 0, color: 'var(--text-2)' }}>{protocol.summary}</p>
         </div>
+        <button
+          type="button"
+          aria-label="Settings"
+          onClick={() => navigate('/settings')}
+          style={{
+            fontSize: 22,
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--text-1)',
+            cursor: 'pointer',
+            padding: 'var(--s-2)',
+          }}
+        >
+          ⚙️
+        </button>
       </header>
 
       <nav

@@ -75,3 +75,25 @@ Hosting target is **Vercel**.
 - Architecture & shared contracts:
   [`docs/superpowers/plans/2026-06-17-peps-00-foundations.md`](./docs/superpowers/plans/2026-06-17-peps-00-foundations.md)
 - Architecture decisions: [`docs/adr/`](./docs/adr)
+
+## Walkthrough
+
+End-to-end first-run flow:
+
+1. **Onboarding** — Splash ("Find your protocol") → "What's your sex?" → "How old are you?" → value-prop carousel → medical gate ("This app is not medical advice" → "I understand").
+2. **Get started** — choose "Match my goal".
+3. **Goals** — pick a goal from the grid (e.g. _Muscle Growth_ → "Build Lean Muscle Fast").
+4. **Proceed** — "See Recommended Protocol" (goals without a recommended protocol show a graceful "coming soon" state).
+5. **Protocol detail** — At a Glance, Why This Stack, What to Expect, Important to Know, FAQ → **Start Protocol**.
+6. **Start** — pick a start date → the schedule is generated.
+7. **Reconstitute** — mix the first dose; tap **Guide Me** for the 5-step illustrated walkthrough (Sanitize → Equalize Pressure → Draw & Inject Water → Dissolve → Draw Dose).
+8. **Home** — see today's doses and check them off.
+
+### Settings & data
+
+- **Dose reminders** — opt-in browser notifications (feature-detected; degrades when unsupported or denied).
+- **Reset / delete all data** — wipes all local data and returns to onboarding.
+
+### Video walkthrough
+
+A short screen-recorded walkthrough of the full flow above is included as a project deliverable (link/file in the submission).
