@@ -44,14 +44,29 @@ export function reducer(state: AppState, action: Action): AppState {
       // The store re-seeds after dispatching RESET_ALL.
       return { ...initialState, hydrated: true };
 
+    // --- Sprint 1: vial kit ---
+    case 'SAVE_VIAL': {
+      const vial = action.payload;
+      const exists = state.vials.some((v) => v.id === vial.id);
+      const vials = exists
+        ? state.vials.map((v) => (v.id === vial.id ? vial : v))
+        : [...state.vials, vial];
+      return { ...state, vials };
+    }
+
+    case 'REMOVE_VIAL': {
+      return {
+        ...state,
+        vials: state.vials.filter((v) => v.id !== action.payload.id),
+      };
+    }
+
     // --- Stubs: fleshed out by later sprints. Return state unchanged so the
     //     union compiles and exhaustiveness is satisfied today. ---
     case 'SET_PROFILE': // Sprint 3
     case 'ACK_MEDICAL': // Sprint 3
     case 'COMPLETE_ONBOARDING': // Sprint 3
     case 'START_PROTOCOL': // Sprint 2
-    case 'SAVE_VIAL': // Sprint 1
-    case 'REMOVE_VIAL': // Sprint 1
     case 'LOG_DOSE': // Sprint 2
     case 'UNDO_DOSE': // Sprint 2
     case 'SET_PREFS': // Sprint 3
