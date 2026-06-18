@@ -34,8 +34,8 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Explore' })).toBeInTheDocument();
   });
 
-  it('routes to the Reconstitute screen', () => {
+  it('routes to the Reconstitute (Kit) screen', () => {
     renderApp('/reconstitute');
-    expect(screen.getByRole('heading', { name: 'Reconstitute' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Your Kit' })).toBeInTheDocument();
   });
 });

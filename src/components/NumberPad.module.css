@@ -1,0 +1,24 @@
+.pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-2);
+}
+.key {
+  min-height: 56px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+  color: var(--text-0);
+  font-family: var(--font-ui);
+  font-size: var(--t-h2);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.key:hover {
+  background: var(--bg-1);
+}
+.key:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}

@@ -1,0 +1,27 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: var(--s-2) var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--glass);
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.chip:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}
+.selected {
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: var(--text-0);
+}
