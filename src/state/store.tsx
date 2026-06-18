@@ -22,9 +22,17 @@ const PERSIST_MAP: Partial<Record<Action['type'], (keyof AppState)[]>> = {
   SET_PREFS: ['prefs'],
 };
 
-export function AppStateProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+export function AppStateProvider({
+  children,
+  initialState: seed,
+}: {
+  children: ReactNode;
+  initialState?: AppState;
+}) {
+  const [state, dispatch] = useReducer(reducer, seed ?? initialState);
   const lastAction = useRef<Action | null>(null);
+  // When a seed state is supplied (e.g. tests), skip idb boot + persistence.
+  const seeded = useRef(seed !== undefined);
 
   // Wrap dispatch to remember the last action for the persistence effect.
   const trackedDispatch: React.Dispatch<Action> = (action) => {
@@ -34,6 +42,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   // Boot: hydrate from idb, then idempotently seed catalogs.
   useEffect(() => {
+    if (seeded.current) return;
     let cancelled = false;
     (async () => {
       const slices = await loadAll();
@@ -60,6 +69,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   // After each tracked dispatch, persist the affected slice(s).
   useEffect(() => {
+    if (seeded.current) return;
     const action = lastAction.current;
     if (!action || !state.hydrated) return;
 

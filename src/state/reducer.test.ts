@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { reducer } from './reducer';
 import { initialState } from './types';
-import type { Vial, AppState } from './types';
+import type { Vial, AppState, DoseLog } from './types';
 import { GOALS } from '../data/goals.seed';
 import { PEPTIDES } from '../data/peptides.seed';
 import { PROTOCOLS } from '../data/protocols.seed';
@@ -102,5 +102,70 @@ describe('reducer — REMOVE_VIAL', () => {
     const base: AppState = { ...initialState, vials: [makeVial({ id: 'v1' })] };
     const next = reducer(base, { type: 'REMOVE_VIAL', payload: { id: 'nope' } });
     expect(next.vials.map((v) => v.id)).toEqual(['v1']);
+  });
+});
+
+// --- Sprint 2 additions ---
+
+describe('START_PROTOCOL', () => {
+  it('appends an active UserProtocol with the given protocolId and startDate', () => {
+    const next = reducer(initialState, {
+      type: 'START_PROTOCOL',
+      payload: { protocolId: 'muscle-growth-tesa-ipa', startDate: '2026-06-17' },
+    });
+    expect(next.userProtocols).toHaveLength(1);
+    const up = next.userProtocols[0];
+    expect(up.protocolId).toBe('muscle-growth-tesa-ipa');
+    expect(up.startDate).toBe('2026-06-17');
+    expect(up.active).toBe(true);
+    expect(typeof up.id).toBe('string');
+    expect(up.id.length).toBeGreaterThan(0);
+  });
+
+  it('deactivates any prior active UserProtocol when a new one starts', () => {
+    const first = reducer(initialState, {
+      type: 'START_PROTOCOL',
+      payload: { protocolId: 'muscle-growth-tesa-ipa', startDate: '2026-01-01' },
+    });
+    const second = reducer(first, {
+      type: 'START_PROTOCOL',
+      payload: { protocolId: 'muscle-growth-tesa-ipa', startDate: '2026-06-17' },
+    });
+    expect(second.userProtocols).toHaveLength(2);
+    expect(second.userProtocols.filter((u) => u.active)).toHaveLength(1);
+    expect(second.userProtocols.find((u) => u.active)?.startDate).toBe('2026-06-17');
+    expect(second.userProtocols.find((u) => u.startDate === '2026-01-01')?.active).toBe(false);
+  });
+});
+
+const sampleLog: DoseLog = {
+  id: 'log-1',
+  userProtocolId: 'up-1',
+  peptideId: 'ipamorelin',
+  scheduledFor: '2026-06-17T07:00:00.000Z',
+  status: 'taken',
+  loggedAt: '2026-06-17T07:01:00.000Z',
+};
+
+describe('LOG_DOSE / UNDO_DOSE', () => {
+  it('LOG_DOSE appends the dose log', () => {
+    const next = reducer(initialState, { type: 'LOG_DOSE', payload: sampleLog });
+    expect(next.doseLogs).toHaveLength(1);
+    expect(next.doseLogs[0]).toEqual(sampleLog);
+  });
+
+  it('UNDO_DOSE removes the dose log by id', () => {
+    const logged = reducer(initialState, { type: 'LOG_DOSE', payload: sampleLog });
+    const undone = reducer(logged, { type: 'UNDO_DOSE', payload: { id: 'log-1' } });
+    expect(undone.doseLogs).toHaveLength(0);
+  });
+
+  it('UNDO_DOSE leaves unrelated logs intact', () => {
+    const other: DoseLog = { ...sampleLog, id: 'log-2', peptideId: 'tesamorelin' };
+    let s = reducer(initialState, { type: 'LOG_DOSE', payload: sampleLog });
+    s = reducer(s, { type: 'LOG_DOSE', payload: other });
+    const undone = reducer(s, { type: 'UNDO_DOSE', payload: { id: 'log-1' } });
+    expect(undone.doseLogs).toHaveLength(1);
+    expect(undone.doseLogs[0].id).toBe('log-2');
   });
 });

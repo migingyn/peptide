@@ -9,6 +9,7 @@ import {
   type Prefs,
   initialState,
 } from './types';
+import { id } from '../lib/ids';
 
 // Canonical action union (Foundations §6). Sprints add cases, never rename.
 export type Action =
@@ -61,14 +62,34 @@ export function reducer(state: AppState, action: Action): AppState {
       };
     }
 
+    // --- Sprint 2: protocol + dose loop ---
+    case 'START_PROTOCOL': {
+      const userProtocols = state.userProtocols.map((u) =>
+        u.active ? { ...u, active: false } : u,
+      );
+      userProtocols.push({
+        id: id(),
+        protocolId: action.payload.protocolId,
+        startDate: action.payload.startDate,
+        active: true,
+      });
+      return { ...state, userProtocols };
+    }
+
+    case 'LOG_DOSE':
+      return { ...state, doseLogs: [...state.doseLogs, action.payload] };
+
+    case 'UNDO_DOSE':
+      return {
+        ...state,
+        doseLogs: state.doseLogs.filter((l) => l.id !== action.payload.id),
+      };
+
     // --- Stubs: fleshed out by later sprints. Return state unchanged so the
     //     union compiles and exhaustiveness is satisfied today. ---
     case 'SET_PROFILE': // Sprint 3
     case 'ACK_MEDICAL': // Sprint 3
     case 'COMPLETE_ONBOARDING': // Sprint 3
-    case 'START_PROTOCOL': // Sprint 2
-    case 'LOG_DOSE': // Sprint 2
-    case 'UNDO_DOSE': // Sprint 2
     case 'SET_PREFS': // Sprint 3
       return state;
 

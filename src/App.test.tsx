@@ -15,9 +15,9 @@ function renderApp(initialPath = '/') {
 }
 
 describe('App', () => {
-  it('renders the Home screen by default', () => {
+  it('renders the Home dashboard by default (empty state with no active protocol)', () => {
     renderApp('/');
-    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'No active protocol' })).toBeInTheDocument();
   });
 
   it('renders the three primary tabs', () => {
