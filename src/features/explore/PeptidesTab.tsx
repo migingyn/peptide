@@ -42,11 +42,18 @@ function chip(active: boolean): CSSProperties {
 const grid: CSSProperties = {
   display: 'grid',
   gridTemplateColumns: 'repeat(2, 1fr)',
+  gridAutoRows: '1fr', // every row the same height -> uniform cards
   gap: 'var(--s-3)',
   marginTop: 'var(--s-4)',
 };
 
 const cell: CSSProperties = {
+  width: '100%',
+  height: '100%', // fill the grid cell so all bubbles match
+  minHeight: '88px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
   textAlign: 'left',
   padding: 'var(--s-4)',
   background: 'var(--bg-1)',
@@ -132,7 +139,7 @@ export function PeptidesTab() {
       ) : (
         <ul style={grid}>
           {results.map((p) => (
-            <li key={p.id} style={{ listStyle: 'none' }}>
+            <li key={p.id} style={{ listStyle: 'none', display: 'flex' }}>
               <button
                 type="button"
                 style={cell}
