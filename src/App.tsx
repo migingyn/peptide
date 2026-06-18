@@ -2,7 +2,8 @@ import { useEffect, type ReactNode } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { TabBar } from './components/TabBar';
 import { Dashboard } from './features/home/Dashboard';
-import { ExploreScreen } from './features/explore/ExploreScreen';
+import { ExploreView } from './features/explore/ExploreView';
+import { PeptideDetail } from './features/explore/PeptideDetail';
 import { KitView } from './features/reconstitute/KitView';
 import { CalculatorView } from './features/reconstitute/CalculatorView';
 import { Onboarding } from './features/onboarding/Onboarding';
@@ -59,7 +60,8 @@ export default function App() {
             <Route path="/goal/:goalId/proceed" element={<Proceed />} />
             <Route path="/protocol/:protocolId" element={<ProtocolDetail />} />
             <Route path="/protocol/:protocolId/start" element={<StartProtocol />} />
-            <Route path="/explore" element={<ExploreScreen />} />
+            <Route path="/explore" element={<ExploreView />} />
+            <Route path="/explore/peptide/:peptideId" element={<PeptideDetail />} />
             <Route path="/reconstitute" element={<KitView />} />
             <Route path="/reconstitute/calc/:peptideId" element={<CalculatorView />} />
             <Route path="/reconstitute/guide/:peptideId" element={<GuideMe />} />

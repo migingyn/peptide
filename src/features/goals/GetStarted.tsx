@@ -3,8 +3,8 @@ import './goals.css';
 
 const ENTRIES = [
   { label: 'Match my goal', to: '/goals', icon: '🎯' },
-  { label: 'Choose a peptide', to: '/explore', icon: '🧪' },
-  { label: 'Browse protocols', to: '/explore', icon: '📋' },
+  { label: 'Choose a peptide', to: '/explore?tab=peptides', icon: '🧪' },
+  { label: 'Browse protocols', to: '/explore?tab=protocols', icon: '📋' },
   { label: 'Add current stack', to: '/reconstitute', icon: '➕' },
 ];
 
