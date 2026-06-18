@@ -15,6 +15,7 @@
 This is the highest-risk math in the product. Write the failing test file in full **first**, watch it fail, then implement the minimal code to make it pass. Compute on raw numbers; round only for display.
 
 **Files:**
+
 - Create: `src/lib/reconstitution.ts`
 - Test: `src/lib/reconstitution.test.ts`
 
@@ -25,13 +26,7 @@ This is the highest-risk math in the product. Write the failing test file in ful
 ```ts
 // src/lib/reconstitution.test.ts
 import { describe, it, expect } from 'vitest';
-import {
-  reconstitute,
-  mcgToMg,
-  roundUnits,
-  ReconError,
-  type ReconInput,
-} from './reconstitution';
+import { reconstitute, mcgToMg, roundUnits, ReconError, type ReconInput } from './reconstitution';
 
 describe('reconstitute — canonical fixtures', () => {
   it('Tesamorelin: M=2, W=1, D=1 → 2 mg/mL, 0.5 mL, 50 units, 2 doses', () => {
@@ -203,6 +198,7 @@ git commit -m "feat: reconstitution pure core with TDD coverage"
 Pure reducer cases, unit-tested. The action shapes are fixed by Foundations §6: `SAVE_VIAL` carries a full `Vial`, `REMOVE_VIAL` carries `{ id }`.
 
 **Files:**
+
 - Modify: `src/state/reducer.ts`
 - Test: `src/state/reducer.test.ts`
 
@@ -355,6 +351,7 @@ git commit -m "feat: SAVE_VIAL and REMOVE_VIAL reducer cases with tests"
 `Button` and `Card` may already be stubbed by Sprint 0. **Check first** — extend, do not duplicate. `Chip` and `NumberPad` are new in this sprint. All styling uses tokens from Foundations §8 via CSS Modules.
 
 **Files:**
+
 - Modify (or Create if absent): `src/components/Button.tsx`, `src/components/Button.module.css`
 - Modify (or Create if absent): `src/components/Card.tsx`, `src/components/Card.module.css`
 - Create: `src/components/Chip.tsx`, `src/components/Chip.module.css`
@@ -404,7 +401,9 @@ export function Button({ variant = 'primary', className, ...rest }: ButtonProps)
   font-size: var(--t-body);
   font-weight: 600;
   cursor: pointer;
-  transition: filter 0.15s ease, background 0.15s ease;
+  transition:
+    filter 0.15s ease,
+    background 0.15s ease;
 }
 .btn:focus-visible {
   outline: 2px solid var(--indigo);
@@ -474,9 +473,7 @@ interface ChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Chip({ selected = false, className, ...rest }: ChipProps) {
-  const cls = [styles.chip, selected ? styles.selected : '', className]
-    .filter(Boolean)
-    .join(' ');
+  const cls = [styles.chip, selected ? styles.selected : '', className].filter(Boolean).join(' ');
   return <button type="button" aria-pressed={selected} className={cls} {...rest} />;
 }
 ```
@@ -496,7 +493,10 @@ export function Chip({ selected = false, className, ...rest }: ChipProps) {
   font-size: var(--t-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 .chip:focus-visible {
   outline: 2px solid var(--indigo);
@@ -600,6 +600,7 @@ git commit -m "feat: Chip and NumberPad components; confirm Button/Card"
 Thin view over the pure core. Inputs: vial size (mg), water (mL), dose — each via preset **chips** + a shared **NumberPad**. Outputs concentration and "draw to N units" (U-100), a units↔mL toggle, and a "Why N mL?" explainer. Numeric display fields use `inputmode="decimal"` and are labeled. On save it builds a `Vial` (Foundations §4) from `reconstitute()` output and dispatches `SAVE_VIAL`, then navigates back to `/reconstitute`.
 
 **Files:**
+
 - Create: `src/features/reconstitute/CalculatorView.tsx`
 - Create: `src/features/reconstitute/CalculatorView.module.css`
 - Modify: `src/App.tsx` (register the route)
@@ -612,12 +613,7 @@ Thin view over the pure core. Inputs: vial size (mg), water (mL), dose — each 
 // src/features/reconstitute/CalculatorView.tsx
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  reconstitute,
-  roundUnits,
-  ReconError,
-  type ReconResult,
-} from '../../lib/reconstitution';
+import { reconstitute, roundUnits, ReconError, type ReconResult } from '../../lib/reconstitution';
 import { id } from '../../lib/ids';
 import { useAppState, useDispatch } from '../../state/store';
 import type { Vial } from '../../state/types';
@@ -755,11 +751,11 @@ export function CalculatorView() {
         </button>
         {whyOpen && result && (
           <p className={styles.why}>
-            Concentration is {result.concentrationMgPerMl} mg/mL ({vial} mg ÷ {water} mL).
-            A {dose} mg dose needs {dose} ÷ {result.concentrationMgPerMl} ={' '}
-            {roundUnits(result.volumeMl * 10) / 10} mL, which is{' '}
-            {roundUnits(result.drawUnits)} units on a U-100 syringe (1 mL = 100 units).
-            This vial yields about {Math.floor(result.dosesPerVial)} doses.
+            Concentration is {result.concentrationMgPerMl} mg/mL ({vial} mg ÷ {water} mL). A {dose}{' '}
+            mg dose needs {dose} ÷ {result.concentrationMgPerMl} ={' '}
+            {roundUnits(result.volumeMl * 10) / 10} mL, which is {roundUnits(result.drawUnits)}{' '}
+            units on a U-100 syringe (1 mL = 100 units). This vial yields about{' '}
+            {Math.floor(result.dosesPerVial)} doses.
           </p>
         )}
       </Card>
@@ -977,7 +973,7 @@ export function CalculatorView() {
 import { CalculatorView } from './features/reconstitute/CalculatorView';
 
 // src/App.tsx — add inside <Routes>
-<Route path="/reconstitute/calc/:peptideId" element={<CalculatorView />} />
+<Route path="/reconstitute/calc/:peptideId" element={<CalculatorView />} />;
 ```
 
 - [ ] **4.4 Type-check + smoke run.** Run:
@@ -1003,6 +999,7 @@ git commit -m "feat: CalculatorView with chips, number pad, and SAVE_VIAL"
 Reads `vials` from state. Shows "N vials in your kit," per-vial cards reading "mg/mL · u draw · mg" with reconstituted date, a `+` to add (routes to a peptide picker → calc), and an empty state. Each card has a remove control dispatching `REMOVE_VIAL`.
 
 **Files:**
+
 - Create: `src/features/reconstitute/KitView.tsx`
 - Create: `src/features/reconstitute/KitView.module.css`
 - Modify: `src/App.tsx` (register the route)
@@ -1019,10 +1016,7 @@ import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import styles from './KitView.module.css';
 
-function peptideName(
-  peptides: { id: string; name: string }[],
-  peptideId: string,
-): string {
+function peptideName(peptides: { id: string; name: string }[], peptideId: string): string {
   return peptides.find((p) => p.id === peptideId)?.name ?? peptideId;
 }
 
@@ -1069,10 +1063,7 @@ export function KitView() {
           <p className={styles.emptyBody}>
             Reconstitute your first vial to start tracking your kit.
           </p>
-          <Button
-            variant="primary"
-            onClick={() => navigate(`/reconstitute/calc/${addPeptideId}`)}
-          >
+          <Button variant="primary" onClick={() => navigate(`/reconstitute/calc/${addPeptideId}`)}>
             Reconstitute a vial
           </Button>
         </Card>
@@ -1082,12 +1073,9 @@ export function KitView() {
             <li key={vial.id}>
               <Card className={styles.vialCard}>
                 <div className={styles.vialMain}>
-                  <span className={styles.vialName}>
-                    {peptideName(peptides, vial.peptideId)}
-                  </span>
+                  <span className={styles.vialName}>{peptideName(peptides, vial.peptideId)}</span>
                   <span className={styles.vialSpec}>
-                    {vial.concentrationMgPerMl} mg/mL · {vial.drawUnits} u draw ·{' '}
-                    {vial.doseMg} mg
+                    {vial.concentrationMgPerMl} mg/mL · {vial.drawUnits} u draw · {vial.doseMg} mg
                   </span>
                   <span className={styles.vialMeta}>
                     Reconstituted {formatDate(vial.reconstitutedAt)}
@@ -1097,9 +1085,7 @@ export function KitView() {
                   type="button"
                   className={styles.remove}
                   aria-label={`Remove ${peptideName(peptides, vial.peptideId)} vial`}
-                  onClick={() =>
-                    dispatch({ type: 'REMOVE_VIAL', payload: { id: vial.id } })
-                  }
+                  onClick={() => dispatch({ type: 'REMOVE_VIAL', payload: { id: vial.id } })}
                 >
                   ✕
                 </button>
@@ -1228,7 +1214,7 @@ export function KitView() {
 import { KitView } from './features/reconstitute/KitView';
 
 // src/App.tsx — add inside <Routes>
-<Route path="/reconstitute" element={<KitView />} />
+<Route path="/reconstitute" element={<KitView />} />;
 ```
 
 - [ ] **5.4 Commit.**
@@ -1246,6 +1232,7 @@ git commit -m "feat: KitView with per-vial cards, empty state, and REMOVE_VIAL"
 Confirm the wedge DoD: reconstitute a vial offline and see it persisted in the kit across reload.
 
 **Files:**
+
 - (No new files — verification only.)
 
 ### Steps

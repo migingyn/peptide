@@ -13,10 +13,12 @@
 ## Task 1 — Scaffold Vite into the existing repo (non-destructive)
 
 **Files:**
+
 - Create: `package.json`, `index.html`, `vite.config.ts`, `tsconfig.json`, `tsconfig.node.json`, `src/main.tsx`, `src/App.tsx`, `src/vite-env.d.ts`, `.gitignore`
 - Modify: (none — existing `LICENSE`, `README.md`, `docs/` must be preserved)
 
 1. **[ ] Confirm working directory and that nothing will be clobbered.** The repo already has `LICENSE`, `README.md`, `docs/`. We scaffold Vite into a temp dir then copy in, to avoid the interactive "directory not empty" prompt.
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    ls -la
@@ -24,6 +26,7 @@
    ```
 
 2. **[ ] Create the Vite react-ts app in a temp sibling dir.** Use a non-interactive scaffold so it never overwrites repo files.
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    npm create vite@latest .peps-tmp -- --template react-ts
@@ -31,6 +34,7 @@
    ```
 
 3. **[ ] Copy scaffold files in WITHOUT overwriting README.md.** Move everything except the temp's `README.md` and `.gitignore` (we write our own below), then remove the temp dir.
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    rm -f .peps-tmp/README.md
@@ -40,9 +44,11 @@
    ls -la
    # Expect now also: package.json  index.html  vite.config.ts  tsconfig*.json  src/  public/  eslint.config.js
    ```
+
    Note: `cp -Rn` (no-clobber) guarantees our `README.md`/`LICENSE`/`docs/` survive.
 
 4. **[ ] Replace `.gitignore` with a complete one.** Vite's default is fine but make it explicit.
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/.gitignore <<'EOF'
    # Logs
@@ -76,6 +82,7 @@
    ```
 
 5. **[ ] Pin `package.json` to the exact runtime/dev dependency budget.** Replace the generated `package.json` entirely. Runtime deps: `react`, `react-dom`, `react-router-dom`, `idb`. Everything else dev-only.
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/package.json <<'EOF'
    {
@@ -129,12 +136,15 @@
    }
    EOF
    ```
+
    Note: we use the classic ESLint 8 + `.eslintrc.cjs` config (Task 3) rather than Vite's flat `eslint.config.js`, so delete the generated flat config:
+
    ```bash
    rm -f /Users/migi/Documents/GitHub/peptide/eslint.config.js
    ```
 
 6. **[ ] Install dependencies.**
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    npm install
@@ -142,6 +152,7 @@
    ```
 
 7. **[ ] Replace `index.html` with the PepS shell.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/index.html <<'EOF'
    <!doctype html>
@@ -161,6 +172,7 @@
    ```
 
 8. **[ ] Replace `tsconfig.json` and `tsconfig.node.json`.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/tsconfig.json <<'EOF'
    {
@@ -204,6 +216,7 @@
    ```
 
 9. **[ ] Write `vite.config.ts` with the shared Vitest block.** RTL + jsdom + setup file, globals on.
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/vite.config.ts <<'EOF'
    /// <reference types="vitest/config" />
@@ -224,6 +237,7 @@
    ```
 
 10. **[ ] Write `vitest.setup.ts` (jest-dom matchers).**
+
     ```bash
     cat > /Users/migi/Documents/GitHub/peptide/vitest.setup.ts <<'EOF'
     import '@testing-library/jest-dom/vitest';
@@ -231,12 +245,14 @@
     ```
 
 11. **[ ] Ensure `src/vite-env.d.ts` exists (Vite generates it; verify).**
+
     ```bash
     cat /Users/migi/Documents/GitHub/peptide/src/vite-env.d.ts
     # Expect: /// <reference types="vite/client" />
     ```
 
 12. **[ ] Remove generated boilerplate we will replace.** Delete the demo `App.css`, `index.css`, `assets/react.svg`, and the demo `App.tsx`/`main.tsx` (rewritten in Task 5).
+
     ```bash
     cd /Users/migi/Documents/GitHub/peptide/src
     rm -f App.css index.css
@@ -255,9 +271,11 @@
 ## Task 2 — Design tokens & global styles
 
 **Files:**
+
 - Create: `src/styles/tokens.css`, `src/styles/global.css`
 
 1. **[ ] Write `src/styles/tokens.css` — EXACT copy of Foundations §8.**
+
    ```bash
    mkdir -p /Users/migi/Documents/GitHub/peptide/src/styles
    cat > /Users/migi/Documents/GitHub/peptide/src/styles/tokens.css <<'EOF'
@@ -305,6 +323,7 @@
    ```
 
 2. **[ ] Write `src/styles/global.css` — resets + base element styles + focus ring.** Implements the §8 a11y baseline (visible `:focus-visible` outline using `--indigo`, dark theme defaults, mobile-first column).
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/styles/global.css <<'EOF'
    @import './tokens.css';
@@ -405,9 +424,11 @@
 ## Task 3 — Dev tooling: ESLint + Prettier + Husky + lint-staged
 
 **Files:**
+
 - Create: `.eslintrc.cjs`, `.eslintignore`, `.prettierrc`, `.prettierignore`, `.husky/pre-commit`
 
 1. **[ ] Write `.eslintrc.cjs`.** TypeScript + React Hooks + react-refresh, Prettier-compatible (turns off stylistic rules via `eslint-config-prettier`).
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/.eslintrc.cjs <<'EOF'
    /* eslint-env node */
@@ -439,6 +460,7 @@
    ```
 
 2. **[ ] Write `.eslintignore`.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/.eslintignore <<'EOF'
    dist
@@ -449,6 +471,7 @@
    ```
 
 3. **[ ] Write `.prettierrc`.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/.prettierrc <<'EOF'
    {
@@ -462,6 +485,7 @@
    ```
 
 4. **[ ] Write `.prettierignore`.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/.prettierignore <<'EOF'
    dist
@@ -472,6 +496,7 @@
    ```
 
 5. **[ ] Initialize Husky.** `npm install` already ran the `prepare` script (Task 1.6) which creates `.husky/`; run it explicitly to be safe.
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    npx husky init
@@ -479,6 +504,7 @@
    ```
 
 6. **[ ] Write the `.husky/pre-commit` gate (runs lint-staged).**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/.husky/pre-commit <<'EOF'
    npx lint-staged
@@ -487,6 +513,7 @@
    ```
 
 7. **[ ] Format the whole repo and verify lint passes (no source files yet beyond styles — that's fine).**
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    npm run format
@@ -506,9 +533,11 @@
 ## Task 4 — State scaffolding: types, ids, seed data
 
 **Files:**
+
 - Create: `src/state/types.ts`, `src/lib/ids.ts`, `src/data/goals.seed.ts`, `src/data/peptides.seed.ts`, `src/data/protocols.seed.ts`
 
 1. **[ ] Write `src/state/types.ts` — EXACT copy of ALL Foundations §4 types incl `initialState`.**
+
    ```bash
    mkdir -p /Users/migi/Documents/GitHub/peptide/src/state
    cat > /Users/migi/Documents/GitHub/peptide/src/state/types.ts <<'EOF'
@@ -623,6 +652,7 @@
    ```
 
 2. **[ ] Write `src/lib/ids.ts` — `id()` helper per Foundations §10.** Uses `crypto.randomUUID` with a counter fallback for environments that lack it.
+
    ```bash
    mkdir -p /Users/migi/Documents/GitHub/peptide/src/lib
    cat > /Users/migi/Documents/GitHub/peptide/src/lib/ids.ts <<'EOF'
@@ -643,6 +673,7 @@
    ```
 
 3. **[ ] Write `src/data/goals.seed.ts` — EXACT Foundations §7 goals.**
+
    ```bash
    mkdir -p /Users/migi/Documents/GitHub/peptide/src/data
    cat > /Users/migi/Documents/GitHub/peptide/src/data/goals.seed.ts <<'EOF'
@@ -703,6 +734,7 @@
    ```
 
 4. **[ ] Write `src/data/peptides.seed.ts` — EXACT Foundations §7 catalog of 10.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/data/peptides.seed.ts <<'EOF'
    import type { Peptide } from '../state/types';
@@ -775,6 +807,7 @@
    ```
 
 5. **[ ] Write `src/data/protocols.seed.ts` — EXACT Foundations §7 Muscle Growth stack.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/data/protocols.seed.ts <<'EOF'
    import type { Protocol } from '../state/types';
@@ -857,10 +890,12 @@
 ## Task 5 — Persistence, reducer, store
 
 **Files:**
+
 - Create: `src/state/persistence.ts`, `src/state/reducer.ts`, `src/state/store.tsx`
 - Test: `src/state/reducer.test.ts`
 
 1. **[ ] Write `src/state/persistence.ts` — idb v1 with all §5 stores, `loadAll`, `persistSlice`.** DB name `peps`, schema version 1; `profile`/`prefs` keyed `'singleton'`, the rest keyed by `id`. Also mirrors `peps.onboarded` to `localStorage` is handled in the store, not here.
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/state/persistence.ts <<'EOF'
    import { openDB, type IDBPDatabase } from 'idb';
@@ -970,6 +1005,7 @@
    ```
 
 2. **[ ] Write `src/state/reducer.ts` — Action union (§6) with HYDRATE/SEED/RESET_ALL implemented; all other cases stubbed (return state unchanged) so the union compiles.** Later sprints flesh out the stubs. The intentionally-minimal stubs are marked.
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/state/reducer.ts <<'EOF'
    import {
@@ -1043,6 +1079,7 @@
    ```
 
 3. **[ ] Write `src/state/store.tsx` — Context + useReducer + persistence effect skeleton + hooks.** On boot: read `localStorage('peps.onboarded')` is left for Sprint 3 routing; here we hydrate from idb, idempotently seed, and persist affected slices after each dispatch per the §6 mapping.
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/state/store.tsx <<'EOF'
    import {
@@ -1163,6 +1200,7 @@
    ```
 
 4. **[ ] Write `src/state/reducer.test.ts` — unit-test the implemented reducer cases.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/state/reducer.test.ts <<'EOF'
    import { describe, it, expect } from 'vitest';
@@ -1230,10 +1268,12 @@
 ## Task 6 — Router shell: TabBar, placeholder screens, App, main
 
 **Files:**
+
 - Create: `src/components/TabBar.tsx`, `src/components/TabBar.css`, `src/features/home/HomeScreen.tsx`, `src/features/explore/ExploreScreen.tsx`, `src/features/reconstitute/ReconstituteScreen.tsx`, `src/App.tsx`, `src/App.css`, `src/main.tsx`
 - Test: `src/App.test.tsx`
 
 1. **[ ] Write `src/components/TabBar.tsx` — bottom 3-tab nav per Foundations §10 (Home `/`, Explore `/explore`, Reconstitute `/reconstitute`).**
+
    ```bash
    mkdir -p /Users/migi/Documents/GitHub/peptide/src/components
    cat > /Users/migi/Documents/GitHub/peptide/src/components/TabBar.tsx <<'EOF'
@@ -1266,6 +1306,7 @@
    ```
 
 2. **[ ] Write `src/components/TabBar.css`.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/components/TabBar.css <<'EOF'
    .tabbar {
@@ -1301,6 +1342,7 @@
    ```
 
 3. **[ ] Write the three placeholder screens.**
+
    ```bash
    mkdir -p /Users/migi/Documents/GitHub/peptide/src/features/home \
             /Users/migi/Documents/GitHub/peptide/src/features/explore \
@@ -1341,6 +1383,7 @@
    ```
 
 4. **[ ] Write `src/App.tsx` — router + layout + TabBar.** Sprint 0 wires only the three tab routes; other routes (`/onboarding/*`, `/goals`, etc. per §10) are added by later sprints.
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/App.tsx <<'EOF'
    import { Routes, Route, Navigate } from 'react-router-dom';
@@ -1369,6 +1412,7 @@
    ```
 
 5. **[ ] Write `src/App.css`.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/App.css <<'EOF'
    .app {
@@ -1393,6 +1437,7 @@
    ```
 
 6. **[ ] Write `src/main.tsx` — mount `<App/>` inside `<AppStateProvider>` and `<BrowserRouter>`, import global styles.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/main.tsx <<'EOF'
    import { StrictMode } from 'react';
@@ -1415,6 +1460,7 @@
    ```
 
 7. **[ ] Write `src/App.test.tsx` — smoke test (App renders + tabs present).** Wraps App in the same providers as production.
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/src/App.test.tsx <<'EOF'
    import { describe, it, expect } from 'vitest';
@@ -1460,9 +1506,11 @@
    });
    EOF
    ```
+
    Note: jsdom has no IndexedDB, so the store's boot effect's `loadAll()` will reject; that is harmless for these render tests (the rejection is unhandled inside the effect and does not fail rendering). If a later sprint needs idb in tests, add `fake-indexeddb` then. For Sprint 0 the smoke tests assert only rendered output.
 
 8. **[ ] Run the full local gate.**
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    npm run format
@@ -1474,6 +1522,7 @@
    ```
 
 9. **[ ] Manually verify the 3 tabs navigate in the dev server.**
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    npm run dev
@@ -1493,9 +1542,11 @@
 ## Task 7 — ADRs
 
 **Files:**
+
 - Create: `docs/adr/ADR-001-local-first.md`, `docs/adr/ADR-002-indexeddb-migrations.md`, `docs/adr/ADR-003-context-usereducer.md`
 
 1. **[ ] Write ADR-001 (Foundations §9).**
+
    ```bash
    mkdir -p /Users/migi/Documents/GitHub/peptide/docs/adr
    cat > /Users/migi/Documents/GitHub/peptide/docs/adr/ADR-001-local-first.md <<'EOF'
@@ -1514,6 +1565,7 @@
    ```
 
 2. **[ ] Write ADR-002 (Foundations §9).**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/docs/adr/ADR-002-indexeddb-migrations.md <<'EOF'
    # ADR-002: IndexedDB with versioned migrations
@@ -1531,6 +1583,7 @@
    ```
 
 3. **[ ] Write ADR-003 (Foundations §9).**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/docs/adr/ADR-003-context-usereducer.md <<'EOF'
    # ADR-003: Context + useReducer over Redux/Zustand
@@ -1559,10 +1612,12 @@
 ## Task 8 — CI, Vercel deploy config, README
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`, `vercel.json`
 - Modify: `README.md`
 
 1. **[ ] Write `.github/workflows/ci.yml` — install → lint → typecheck → test → build on PR + push to main.**
+
    ```bash
    mkdir -p /Users/migi/Documents/GitHub/peptide/.github/workflows
    cat > /Users/migi/Documents/GitHub/peptide/.github/workflows/ci.yml <<'EOF'
@@ -1604,6 +1659,7 @@
    ```
 
 2. **[ ] Write `vercel.json` — SPA rewrite so client routes resolve.**
+
    ```bash
    cat > /Users/migi/Documents/GitHub/peptide/vercel.json <<'EOF'
    {
@@ -1614,7 +1670,8 @@
    ```
 
 3. **[ ] Replace `README.md` with setup/build/test/deploy docs.**
-   ```bash
+
+   ````bash
    cat > /Users/migi/Documents/GitHub/peptide/README.md <<'EOF'
    # PepS
 
@@ -1630,7 +1687,7 @@
 
    ```bash
    npm install
-   ```
+   ````
 
    ## Develop
 
@@ -1675,13 +1732,16 @@
      preview deployments automatically.
 
    ## Project docs
-
    - Architecture & shared contracts: `docs/superpowers/plans/2026-06-17-peps-00-foundations.md`
    - Architecture decisions: `docs/adr/`
-   EOF
+     EOF
+
+   ```
+
    ```
 
 4. **[ ] Verify CI steps pass locally one more time, then commit.**
+
    ```bash
    cd /Users/migi/Documents/GitHub/peptide
    npm run lint && npm run typecheck && npm run test && npm run build
