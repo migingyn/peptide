@@ -1,5 +1,6 @@
 .goal-screen {
-  min-height: 100dvh;
+  /* Fill the viewport minus the fixed tab bar so a bottom-pinned CTA isn't hidden behind it. */
+  min-height: calc(100dvh - var(--tabbar-h));
   max-width: var(--app-max);
   margin: 0 auto;
   padding: var(--s-6) var(--s-5) var(--s-7);

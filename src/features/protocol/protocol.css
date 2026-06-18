@@ -2,7 +2,7 @@
   min-height: 100dvh;
   max-width: var(--app-max);
   margin: 0 auto;
-  padding: var(--s-6) var(--s-5) calc(var(--s-7) + 72px);
+  padding: var(--s-6) var(--s-5) calc(var(--s-7) + 72px + var(--tabbar-h));
   background: var(--bg-0);
   color: var(--text-0);
 }
@@ -49,7 +49,8 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  /* Sit directly above the fixed tab bar instead of behind it. */
+  bottom: var(--tabbar-h);
   padding: var(--s-3) var(--s-5) var(--s-5);
   max-width: var(--app-max);
   margin: 0 auto;

@@ -26,9 +26,14 @@ function formatDate(iso: string): string {
 export function KitView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { vials, peptides } = useAppState();
+  const { vials, peptides, userProtocols, protocols } = useAppState();
 
-  const addPeptideId = peptides[0]?.id ?? 'tesamorelin';
+  // Default the "add a vial" target to the active protocol's first peptide
+  // (e.g. Tesamorelin for Muscle Growth). Don't rely on peptides[0]: idb getAll
+  // returns peptides sorted by id, so after a reload peptides[0] is '5-amino-1mq'.
+  const activeProtocolId = userProtocols.find((up) => up.active)?.protocolId;
+  const activeProtocol = protocols.find((p) => p.id === activeProtocolId);
+  const addPeptideId = activeProtocol?.items[0]?.peptideId ?? peptides[0]?.id ?? 'tesamorelin';
 
   return (
     <main className={styles.screen}>
