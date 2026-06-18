@@ -1,0 +1,98 @@
+.pd-screen {
+  min-height: 100dvh;
+  max-width: var(--app-max);
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-5) calc(var(--s-7) + 72px);
+  background: var(--bg-0);
+  color: var(--text-0);
+}
+.pd-name {
+  font-family: var(--font-display);
+  font-size: var(--t-display);
+  margin: 0 0 var(--s-2);
+}
+.pd-glance {
+  font-size: var(--t-body);
+  color: var(--amber);
+  margin: 0 0 var(--s-5);
+}
+.pd-section {
+  margin: 0 0 var(--s-5);
+}
+.pd-h {
+  font-size: var(--t-h2);
+  margin: 0 0 var(--s-3);
+}
+.pd-row {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  margin-bottom: var(--s-2);
+}
+.pd-row-title {
+  font-size: var(--t-body);
+  margin: 0 0 var(--s-1);
+  color: var(--text-0);
+}
+.pd-row-text {
+  font-size: var(--t-sm);
+  margin: 0;
+  color: var(--text-1);
+}
+.pd-li {
+  font-size: var(--t-body);
+  color: var(--text-1);
+  margin: 0 0 var(--s-2);
+}
+.pd-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--s-3) var(--s-5) var(--s-5);
+  max-width: var(--app-max);
+  margin: 0 auto;
+  background: linear-gradient(transparent, var(--bg-0) 30%);
+}
+.pd-cta {
+  width: 100%;
+  padding: var(--s-4);
+  border-radius: var(--r-pill);
+  border: none;
+  background: var(--amber);
+  color: #1a1200;
+  font-weight: 700;
+  font-size: var(--t-body);
+  cursor: pointer;
+}
+.pd-cta:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}
+.pd-cta:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.pd-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin: var(--s-5) 0;
+}
+.pd-label {
+  color: var(--text-1);
+  font-size: var(--t-sm);
+}
+.pd-input {
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--bg-1);
+  color: var(--text-0);
+  font-size: var(--t-body);
+}
+.pd-input:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}

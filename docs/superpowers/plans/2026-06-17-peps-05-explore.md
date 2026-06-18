@@ -13,6 +13,7 @@
 ## Task 1 — Pure search helper (`lib/search.ts`) — STRICT TDD
 
 **Files:**
+
 - Create: `src/lib/search.ts`
 - Test: `src/lib/search.test.ts`
 
@@ -24,16 +25,53 @@ import type { Peptide } from '../state/types';
 import { filterPeptides } from './search';
 
 const FIXTURE: Peptide[] = [
-  { id: 'tesamorelin', name: 'Tesamorelin', nickname: 'Night Builder', category: 'Growth', blurb: 'GHRH analog; supports lean mass and fat loss.' },
-  { id: 'ipamorelin', name: 'Ipamorelin', nickname: 'Morning Pulse', category: 'Growth', blurb: 'Selective GH secretagogue; gentle GH pulse.' },
-  { id: 'bpc-157', name: 'BPC-157', category: 'Recovery', blurb: 'Body-protection compound; tissue repair.' },
-  { id: 'cjc-1295', name: 'CJC-1295 (no DAC)', category: 'Growth', blurb: 'GHRH analog; pairs with a GHRP.' },
+  {
+    id: 'tesamorelin',
+    name: 'Tesamorelin',
+    nickname: 'Night Builder',
+    category: 'Growth',
+    blurb: 'GHRH analog; supports lean mass and fat loss.',
+  },
+  {
+    id: 'ipamorelin',
+    name: 'Ipamorelin',
+    nickname: 'Morning Pulse',
+    category: 'Growth',
+    blurb: 'Selective GH secretagogue; gentle GH pulse.',
+  },
+  {
+    id: 'bpc-157',
+    name: 'BPC-157',
+    category: 'Recovery',
+    blurb: 'Body-protection compound; tissue repair.',
+  },
+  {
+    id: 'cjc-1295',
+    name: 'CJC-1295 (no DAC)',
+    category: 'Growth',
+    blurb: 'GHRH analog; pairs with a GHRP.',
+  },
   { id: 'epitalon', name: 'Epitalon', category: 'Longevity', blurb: 'Telomerase-related peptide.' },
   { id: 'ghk-cu', name: 'GHK-Cu', category: 'Beauty', blurb: 'Copper peptide; skin and collagen.' },
   { id: 'kpv', name: 'KPV', category: 'Recovery', blurb: 'Anti-inflammatory tripeptide.' },
-  { id: 'melanotan-2', name: 'Melanotan II', category: 'Beauty', blurb: 'Melanocortin agonist; tanning.' },
-  { id: 'mots-c', name: 'MOTS-c', category: 'Performance', blurb: 'Mitochondrial peptide; metabolism.' },
-  { id: '5-amino-1mq', name: '5-Amino-1MQ', category: 'Performance', blurb: 'NNMT inhibitor; metabolic support.' },
+  {
+    id: 'melanotan-2',
+    name: 'Melanotan II',
+    category: 'Beauty',
+    blurb: 'Melanocortin agonist; tanning.',
+  },
+  {
+    id: 'mots-c',
+    name: 'MOTS-c',
+    category: 'Performance',
+    blurb: 'Mitochondrial peptide; metabolism.',
+  },
+  {
+    id: '5-amino-1mq',
+    name: '5-Amino-1MQ',
+    category: 'Performance',
+    blurb: 'NNMT inhibitor; metabolic support.',
+  },
 ];
 
 const ids = (ps: Peptide[]) => ps.map((p) => p.id).sort();
@@ -53,7 +91,11 @@ describe('filterPeptides', () => {
 
   it('matches "growth" via category text for Growth-category peptides', () => {
     // "growth" appears in the Growth category for tesamorelin, ipamorelin, cjc-1295
-    expect(ids(filterPeptides(FIXTURE, 'growth', null))).toEqual(['cjc-1295', 'ipamorelin', 'tesamorelin']);
+    expect(ids(filterPeptides(FIXTURE, 'growth', null))).toEqual([
+      'cjc-1295',
+      'ipamorelin',
+      'tesamorelin',
+    ]);
   });
 
   it('matches name substrings case-insensitively', () => {
@@ -113,9 +155,7 @@ export function filterPeptides(
   return peptides.filter((p) => {
     if (category !== null && p.category !== category) return false;
     if (q === '') return true;
-    const haystack = [p.name, p.nickname ?? '', p.category, p.blurb]
-      .join(' ')
-      .toLowerCase();
+    const haystack = [p.name, p.nickname ?? '', p.category, p.blurb].join(' ').toLowerCase();
     return haystack.includes(q);
   });
 }
@@ -130,6 +170,7 @@ export function filterPeptides(
 ## Task 2 — `Segmented` control component
 
 **Files:**
+
 - Create: `src/components/Segmented.tsx`
 - Test: `src/components/Segmented.test.tsx`
 
@@ -236,6 +277,7 @@ describe('Segmented', () => {
 ## Task 3 — `ProtocolsTab` (curated protocol cards)
 
 **Files:**
+
 - Create: `src/features/explore/ProtocolsTab.tsx`
 - Test: `src/features/explore/ProtocolsTab.test.tsx`
 
@@ -263,8 +305,16 @@ const card: CSSProperties = {
 };
 
 const titleStyle: CSSProperties = { margin: 0, fontSize: 'var(--t-h2)', fontWeight: 700 };
-const summaryStyle: CSSProperties = { margin: 'var(--s-2) 0 0', color: 'var(--text-1)', fontSize: 'var(--t-body)' };
-const metaStyle: CSSProperties = { marginTop: 'var(--s-3)', color: 'var(--text-2)', fontSize: 'var(--t-sm)' };
+const summaryStyle: CSSProperties = {
+  margin: 'var(--s-2) 0 0',
+  color: 'var(--text-1)',
+  fontSize: 'var(--t-body)',
+};
+const metaStyle: CSSProperties = {
+  marginTop: 'var(--s-3)',
+  color: 'var(--text-2)',
+  fontSize: 'var(--t-sm)',
+};
 
 export function ProtocolsTab() {
   const { protocols } = useAppState();
@@ -277,12 +327,7 @@ export function ProtocolsTab() {
   return (
     <div style={list}>
       {protocols.map((p) => (
-        <button
-          key={p.id}
-          type="button"
-          style={card}
-          onClick={() => navigate(`/protocol/${p.id}`)}
-        >
+        <button key={p.id} type="button" style={card} onClick={() => navigate(`/protocol/${p.id}`)}>
           <h3 style={titleStyle}>{p.name}</h3>
           <p style={summaryStyle}>{p.summary}</p>
           <div style={metaStyle}>
@@ -366,6 +411,7 @@ describe('ProtocolsTab', () => {
 ## Task 4 — `PeptidesTab` (catalog grid with search + category filters)
 
 **Files:**
+
 - Create: `src/features/explore/PeptidesTab.tsx`
 - Test: `src/features/explore/PeptidesTab.test.tsx`
 
@@ -432,7 +478,11 @@ const cell: CSSProperties = {
 };
 
 const cellName: CSSProperties = { margin: 0, fontSize: 'var(--t-body)', fontWeight: 700 };
-const cellCat: CSSProperties = { marginTop: 'var(--s-1)', color: 'var(--text-2)', fontSize: 'var(--t-xs)' };
+const cellCat: CSSProperties = {
+  marginTop: 'var(--s-1)',
+  color: 'var(--text-2)',
+  fontSize: 'var(--t-xs)',
+};
 
 export function PeptidesTab() {
   const { peptides } = useAppState();
@@ -453,7 +503,16 @@ export function PeptidesTab() {
   return (
     <div>
       <div style={controls}>
-        <label htmlFor="peptide-search" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+        <label
+          htmlFor="peptide-search"
+          style={{
+            position: 'absolute',
+            width: 1,
+            height: 1,
+            overflow: 'hidden',
+            clip: 'rect(0 0 0 0)',
+          }}
+        >
           Search peptides
         </label>
         <input
@@ -528,9 +587,26 @@ vi.mock('react-router-dom', async () => {
 });
 
 const PEPTIDES: Peptide[] = [
-  { id: 'tesamorelin', name: 'Tesamorelin', nickname: 'Night Builder', category: 'Growth', blurb: 'GHRH analog; supports lean mass and fat loss.' },
-  { id: 'ipamorelin', name: 'Ipamorelin', nickname: 'Morning Pulse', category: 'Growth', blurb: 'Selective GH secretagogue; gentle GH pulse.' },
-  { id: 'bpc-157', name: 'BPC-157', category: 'Recovery', blurb: 'Body-protection compound; tissue repair.' },
+  {
+    id: 'tesamorelin',
+    name: 'Tesamorelin',
+    nickname: 'Night Builder',
+    category: 'Growth',
+    blurb: 'GHRH analog; supports lean mass and fat loss.',
+  },
+  {
+    id: 'ipamorelin',
+    name: 'Ipamorelin',
+    nickname: 'Morning Pulse',
+    category: 'Growth',
+    blurb: 'Selective GH secretagogue; gentle GH pulse.',
+  },
+  {
+    id: 'bpc-157',
+    name: 'BPC-157',
+    category: 'Recovery',
+    blurb: 'Body-protection compound; tissue repair.',
+  },
   { id: 'kpv', name: 'KPV', category: 'Recovery', blurb: 'Anti-inflammatory tripeptide.' },
 ];
 
@@ -598,6 +674,7 @@ describe('PeptidesTab', () => {
 ## Task 5 — `PeptideDetail` view + route
 
 **Files:**
+
 - Create: `src/features/explore/PeptideDetail.tsx`
 - Test: `src/features/explore/PeptideDetail.test.tsx`
 
@@ -617,7 +694,12 @@ const wrap: CSSProperties = {
   padding: 'var(--s-5)',
 };
 
-const nameStyle: CSSProperties = { margin: 0, fontSize: 'var(--t-h1)', fontWeight: 700, color: 'var(--text-0)' };
+const nameStyle: CSSProperties = {
+  margin: 0,
+  fontSize: 'var(--t-h1)',
+  fontWeight: 700,
+  color: 'var(--text-0)',
+};
 const nickStyle: CSSProperties = { margin: 0, color: 'var(--amber)', fontSize: 'var(--t-body)' };
 const catStyle: CSSProperties = {
   alignSelf: 'flex-start',
@@ -628,7 +710,12 @@ const catStyle: CSSProperties = {
   color: 'var(--text-1)',
   fontSize: 'var(--t-xs)',
 };
-const blurbStyle: CSSProperties = { margin: 0, color: 'var(--text-1)', fontSize: 'var(--t-body)', lineHeight: 1.5 };
+const blurbStyle: CSSProperties = {
+  margin: 0,
+  color: 'var(--text-1)',
+  fontSize: 'var(--t-body)',
+  lineHeight: 1.5,
+};
 
 export function PeptideDetail() {
   const { peptideId } = useParams<{ peptideId: string }>();
@@ -670,7 +757,13 @@ vi.mock('react-router-dom', async () => {
 });
 
 const PEPTIDES: Peptide[] = [
-  { id: 'tesamorelin', name: 'Tesamorelin', nickname: 'Night Builder', category: 'Growth', blurb: 'GHRH analog; supports lean mass and fat loss.' },
+  {
+    id: 'tesamorelin',
+    name: 'Tesamorelin',
+    nickname: 'Night Builder',
+    category: 'Growth',
+    blurb: 'GHRH analog; supports lean mass and fat loss.',
+  },
 ];
 
 vi.mock('../../state/store', () => ({
@@ -721,6 +814,7 @@ describe('PeptideDetail', () => {
 ## Task 6 — Explore screen (sub-tab switch) + routes
 
 **Files:**
+
 - Create: `src/features/explore/ExploreView.tsx`
 - Test: `src/features/explore/ExploreView.test.tsx`
 - Modify: `src/App.tsx`
@@ -742,7 +836,12 @@ const page: CSSProperties = {
   margin: '0 auto',
 };
 
-const heading: CSSProperties = { margin: 0, fontSize: 'var(--t-h1)', fontWeight: 700, color: 'var(--text-0)' };
+const heading: CSSProperties = {
+  margin: 0,
+  fontSize: 'var(--t-h1)',
+  fontWeight: 700,
+  color: 'var(--text-0)',
+};
 
 const SUBTABS = [
   { value: 'peptides', label: 'Peptides' },
@@ -782,7 +881,13 @@ vi.mock('react-router-dom', async () => {
 });
 
 const PEPTIDES: Peptide[] = [
-  { id: 'tesamorelin', name: 'Tesamorelin', nickname: 'Night Builder', category: 'Growth', blurb: 'GHRH analog.' },
+  {
+    id: 'tesamorelin',
+    name: 'Tesamorelin',
+    nickname: 'Night Builder',
+    category: 'Growth',
+    blurb: 'GHRH analog.',
+  },
 ];
 const PROTOCOL: Protocol = {
   id: 'muscle-growth-tesa-ipa',

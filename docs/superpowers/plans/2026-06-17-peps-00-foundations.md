@@ -12,13 +12,13 @@
 
 Each sprint is its own plan file and produces working, testable software.
 
-| Plan | Sprint | Produces | DoD |
-|---|---|---|---|
-| `peps-01-scaffold.md` | Sprint 0 | Vite app, tooling, 3-tab shell, tokens, CI, Vercel deploy | Green CI, live URL |
-| `peps-02-reconstitution-wedge.md` | Sprint 1 | `lib/reconstitution.ts` (TDD), CalculatorView, Vial persistence, KitView | Reconstitute a vial offline, see it in kit |
-| `peps-03-protocol-schedule-home.md` | Sprint 2 | Protocol seed, `START_PROTOCOL`, `lib/schedule.ts` (TDD), Home dashboard, dose check-off | Start → today → check-off loop works |
-| `peps-04-onboarding-goals-guide.md` | Sprint 3 | Onboarding + medical gate, goal grid, protocol detail, Guide Me 5-step, notifications, a11y | Full flow demoable end-to-end |
-| `peps-05-explore.md` | Promoted P1 | Explore tabs: Protocols + Peptides catalog w/ search/categories, detail routes | Browse catalog, route into detail |
+| Plan                                | Sprint      | Produces                                                                                    | DoD                                        |
+| ----------------------------------- | ----------- | ------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `peps-01-scaffold.md`               | Sprint 0    | Vite app, tooling, 3-tab shell, tokens, CI, Vercel deploy                                   | Green CI, live URL                         |
+| `peps-02-reconstitution-wedge.md`   | Sprint 1    | `lib/reconstitution.ts` (TDD), CalculatorView, Vial persistence, KitView                    | Reconstitute a vial offline, see it in kit |
+| `peps-03-protocol-schedule-home.md` | Sprint 2    | Protocol seed, `START_PROTOCOL`, `lib/schedule.ts` (TDD), Home dashboard, dose check-off    | Start → today → check-off loop works       |
+| `peps-04-onboarding-goals-guide.md` | Sprint 3    | Onboarding + medical gate, goal grid, protocol detail, Guide Me 5-step, notifications, a11y | Full flow demoable end-to-end              |
+| `peps-05-explore.md`                | Promoted P1 | Explore tabs: Protocols + Peptides catalog w/ search/categories, detail routes              | Browse catalog, route into detail          |
 
 **Build order:** 01 → 02 → 03 → 04, with 05 after 03 (needs seed data + detail routes). Foundations is a prerequisite read for all.
 
@@ -89,10 +89,12 @@ doses_per_vial          = M / D
 ```
 
 **Canonical test fixtures (from app screenshots):**
+
 - Tesamorelin: M=2, W=1, D=1 → concentration 2 mg/mL, volume 0.5 mL, **50 units**, 2 doses/vial.
 - Ipamorelin: M=2, W=2, D=0.1 → concentration 1 mg/mL, volume 0.1 mL, **10 units**, 20 doses/vial.
 
 **Rules:**
+
 - Compute on raw numbers; round only for display.
 - Invalid input → throw or return an error result for: `W <= 0`, `M <= 0`, `D <= 0`, non-numeric/NaN.
 - `D > M` is valid math but warn ("dose exceeds a full vial").
@@ -113,13 +115,13 @@ export interface ReconResult {
   volumeMl: number;
   drawUnits: number;
   dosesPerVial: number;
-  warnings: string[];        // e.g. ["dose exceeds a full vial"]
+  warnings: string[]; // e.g. ["dose exceeds a full vial"]
 }
 
 export class ReconError extends Error {}
 
 export function reconstitute(input: ReconInput): ReconResult;
-export function mcgToMg(mcg: number): number;     // mcg / 1000
+export function mcgToMg(mcg: number): number; // mcg / 1000
 export function roundUnits(units: number): number; // display: 1 decimal place
 ```
 
@@ -138,7 +140,7 @@ export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday
 export interface Profile {
   sex: Sex | null;
   ageBand: AgeBand | null;
-  onboardedAt: string | null;   // ISO string
+  onboardedAt: string | null; // ISO string
   medicalAck: boolean;
 }
 
@@ -146,16 +148,16 @@ export interface Peptide {
   id: string;
   name: string;
   nickname?: string;
-  category: string;             // e.g. "Growth", "Recovery", "Beauty"
+  category: string; // e.g. "Growth", "Recovery", "Beauty"
   blurb: string;
 }
 
 export interface ProtocolItem {
   peptideId: string;
   doseMg: number;
-  timeOfDay: string;            // "07:00" 24h
-  daysOfWeek: DayOfWeek[];      // e.g. Mon–Fri => [1,2,3,4,5]
-  nickname?: string;            // "Night Builder"
+  timeOfDay: string; // "07:00" 24h
+  daysOfWeek: DayOfWeek[]; // e.g. Mon–Fri => [1,2,3,4,5]
+  nickname?: string; // "Night Builder"
 }
 
 export interface Protocol {
@@ -165,10 +167,10 @@ export interface Protocol {
   weeks: number;
   injectionsPerWeek: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
-  costPerWeek?: number;         // ~66
-  summary: string;              // "At a Glance" line
+  costPerWeek?: number; // ~66
+  summary: string; // "At a Glance" line
   whyThisStack: { peptideId: string; nickname: string; reason: string }[];
-  whatToExpect: { range: string; text: string }[];   // "Week 1", "2-4", "5-8"
+  whatToExpect: { range: string; text: string }[]; // "Week 1", "2-4", "5-8"
   importantToKnow: string[];
   faq: { q: string; a: string }[];
   items: ProtocolItem[];
@@ -176,8 +178,8 @@ export interface Protocol {
 
 export interface Goal {
   id: string;
-  name: string;                 // "Muscle Growth"
-  tagline: string;              // "Build Lean Muscle Fast"
+  name: string; // "Muscle Growth"
+  tagline: string; // "Build Lean Muscle Fast"
   blurb: string;
   recommendedProtocolId: string | null;
 }
@@ -185,7 +187,7 @@ export interface Goal {
 export interface UserProtocol {
   id: string;
   protocolId: string;
-  startDate: string;            // ISO date "2026-06-17"
+  startDate: string; // ISO date "2026-06-17"
   active: boolean;
 }
 
@@ -197,16 +199,16 @@ export interface Vial {
   doseMg: number;
   concentrationMgPerMl: number;
   drawUnits: number;
-  reconstitutedAt: string;      // ISO
+  reconstitutedAt: string; // ISO
 }
 
 export interface DoseLog {
   id: string;
   userProtocolId: string;
   peptideId: string;
-  scheduledFor: string;         // ISO datetime of the scheduled occurrence
+  scheduledFor: string; // ISO datetime of the scheduled occurrence
   status: DoseStatus;
-  loggedAt: string;             // ISO
+  loggedAt: string; // ISO
 }
 
 export interface Prefs {
@@ -216,18 +218,19 @@ export interface Prefs {
 
 export interface AppState {
   profile: Profile;
-  peptides: Peptide[];          // seeded
-  protocols: Protocol[];        // seeded
-  goals: Goal[];                // seeded
+  peptides: Peptide[]; // seeded
+  protocols: Protocol[]; // seeded
+  goals: Goal[]; // seeded
   userProtocols: UserProtocol[];
   vials: Vial[];
   doseLogs: DoseLog[];
   prefs: Prefs;
-  hydrated: boolean;            // false until idb rehydrate completes
+  hydrated: boolean; // false until idb rehydrate completes
 }
 ```
 
 **Initial state:**
+
 ```ts
 export const initialState: AppState = {
   profile: { sex: null, ageBand: null, onboardedAt: null, medicalAck: false },
@@ -253,8 +256,11 @@ export const initialState: AppState = {
 
 ```ts
 export async function openPepsDb(): Promise<IDBPDatabase>;
-export async function loadAll(): Promise<Partial<AppState>>;   // reads every store → state slices
-export async function persistSlice<K extends keyof AppState>(key: K, value: AppState[K]): Promise<void>;
+export async function loadAll(): Promise<Partial<AppState>>; // reads every store → state slices
+export async function persistSlice<K extends keyof AppState>(
+  key: K,
+  value: AppState[K],
+): Promise<void>;
 ```
 
 - Seed data (`peptides`, `protocols`, `goals`) is loaded from `src/data/*.seed.ts` into state on boot and written to idb only if the store is empty (idempotent seeding).
@@ -273,7 +279,7 @@ export type Action =
   | { type: 'HYDRATE'; payload: Partial<AppState> }
   | { type: 'SET_PROFILE'; payload: Partial<Profile> }
   | { type: 'ACK_MEDICAL' }
-  | { type: 'COMPLETE_ONBOARDING' }                      // sets onboardedAt
+  | { type: 'COMPLETE_ONBOARDING' } // sets onboardedAt
   | { type: 'SEED'; payload: { peptides: Peptide[]; protocols: Protocol[]; goals: Goal[] } }
   | { type: 'START_PROTOCOL'; payload: { protocolId: string; startDate: string } }
   | { type: 'SAVE_VIAL'; payload: Vial }
@@ -285,6 +291,7 @@ export type Action =
 ```
 
 **Persistence mapping (which action writes which slice):** the store's effect, after each dispatch, persists only the affected slice(s):
+
 - `SET_PROFILE`/`ACK_MEDICAL`/`COMPLETE_ONBOARDING` → `persistSlice('profile', ...)`
 - `START_PROTOCOL` → `persistSlice('userProtocols', ...)`
 - `SAVE_VIAL`/`REMOVE_VIAL` → `persistSlice('vials', ...)`
@@ -293,6 +300,7 @@ export type Action =
 - `RESET_ALL` → clear all stores, reset to `initialState` (then re-seed).
 
 **Hooks exposed by `store.tsx`:**
+
 ```ts
 export function useAppState(): AppState;
 export function useDispatch(): React.Dispatch<Action>;
@@ -303,36 +311,117 @@ export function useDispatch(): React.Dispatch<Action>;
 ## §7. Seed Data (`src/data/*.seed.ts`)
 
 **`goals.seed.ts`** — 7 goals; only Muscle Growth has a recommended protocol in P0:
+
 ```ts
 export const GOALS: Goal[] = [
-  { id: 'muscle-growth', name: 'Muscle Growth', tagline: 'Build Lean Muscle Fast',
-    blurb: 'Stack growth-hormone secretagogues to build lean mass.', recommendedProtocolId: 'muscle-growth-tesa-ipa' },
-  { id: 'injury-recovery', name: 'Injury Recovery', tagline: 'Heal Faster', blurb: 'Support tissue repair.', recommendedProtocolId: null },
-  { id: 'skincare-beauty', name: 'Skincare & Beauty', tagline: 'Glow From Within', blurb: 'Collagen & skin support.', recommendedProtocolId: null },
-  { id: 'energy-performance', name: 'Energy & Performance', tagline: 'Peak Output', blurb: 'Mitochondrial & endurance support.', recommendedProtocolId: null },
-  { id: 'weight-loss', name: 'Weight Loss', tagline: 'Lean Down', blurb: 'Metabolic support.', recommendedProtocolId: null },
-  { id: 'brain-enhancement', name: 'Brain Enhancement', tagline: 'Sharper Focus', blurb: 'Cognitive support.', recommendedProtocolId: null },
-  { id: 'anti-aging', name: 'Anti Aging', tagline: 'Age Well', blurb: 'Longevity support.', recommendedProtocolId: null },
+  {
+    id: 'muscle-growth',
+    name: 'Muscle Growth',
+    tagline: 'Build Lean Muscle Fast',
+    blurb: 'Stack growth-hormone secretagogues to build lean mass.',
+    recommendedProtocolId: 'muscle-growth-tesa-ipa',
+  },
+  {
+    id: 'injury-recovery',
+    name: 'Injury Recovery',
+    tagline: 'Heal Faster',
+    blurb: 'Support tissue repair.',
+    recommendedProtocolId: null,
+  },
+  {
+    id: 'skincare-beauty',
+    name: 'Skincare & Beauty',
+    tagline: 'Glow From Within',
+    blurb: 'Collagen & skin support.',
+    recommendedProtocolId: null,
+  },
+  {
+    id: 'energy-performance',
+    name: 'Energy & Performance',
+    tagline: 'Peak Output',
+    blurb: 'Mitochondrial & endurance support.',
+    recommendedProtocolId: null,
+  },
+  {
+    id: 'weight-loss',
+    name: 'Weight Loss',
+    tagline: 'Lean Down',
+    blurb: 'Metabolic support.',
+    recommendedProtocolId: null,
+  },
+  {
+    id: 'brain-enhancement',
+    name: 'Brain Enhancement',
+    tagline: 'Sharper Focus',
+    blurb: 'Cognitive support.',
+    recommendedProtocolId: null,
+  },
+  {
+    id: 'anti-aging',
+    name: 'Anti Aging',
+    tagline: 'Age Well',
+    blurb: 'Longevity support.',
+    recommendedProtocolId: null,
+  },
 ];
 ```
 
 **`peptides.seed.ts`** — catalog of 10:
+
 ```ts
 export const PEPTIDES: Peptide[] = [
-  { id: 'tesamorelin', name: 'Tesamorelin', nickname: 'Night Builder', category: 'Growth', blurb: 'GHRH analog; supports lean mass and fat loss.' },
-  { id: 'ipamorelin', name: 'Ipamorelin', nickname: 'Morning Pulse', category: 'Growth', blurb: 'Selective GH secretagogue; gentle GH pulse.' },
-  { id: 'bpc-157', name: 'BPC-157', category: 'Recovery', blurb: 'Body-protection compound; tissue repair.' },
-  { id: 'cjc-1295', name: 'CJC-1295 (no DAC)', category: 'Growth', blurb: 'GHRH analog; pairs with a GHRP.' },
+  {
+    id: 'tesamorelin',
+    name: 'Tesamorelin',
+    nickname: 'Night Builder',
+    category: 'Growth',
+    blurb: 'GHRH analog; supports lean mass and fat loss.',
+  },
+  {
+    id: 'ipamorelin',
+    name: 'Ipamorelin',
+    nickname: 'Morning Pulse',
+    category: 'Growth',
+    blurb: 'Selective GH secretagogue; gentle GH pulse.',
+  },
+  {
+    id: 'bpc-157',
+    name: 'BPC-157',
+    category: 'Recovery',
+    blurb: 'Body-protection compound; tissue repair.',
+  },
+  {
+    id: 'cjc-1295',
+    name: 'CJC-1295 (no DAC)',
+    category: 'Growth',
+    blurb: 'GHRH analog; pairs with a GHRP.',
+  },
   { id: 'epitalon', name: 'Epitalon', category: 'Longevity', blurb: 'Telomerase-related peptide.' },
   { id: 'ghk-cu', name: 'GHK-Cu', category: 'Beauty', blurb: 'Copper peptide; skin and collagen.' },
   { id: 'kpv', name: 'KPV', category: 'Recovery', blurb: 'Anti-inflammatory tripeptide.' },
-  { id: 'melanotan-2', name: 'Melanotan II', category: 'Beauty', blurb: 'Melanocortin agonist; tanning.' },
-  { id: 'mots-c', name: 'MOTS-c', category: 'Performance', blurb: 'Mitochondrial peptide; metabolism.' },
-  { id: '5-amino-1mq', name: '5-Amino-1MQ', category: 'Performance', blurb: 'NNMT inhibitor; metabolic support.' },
+  {
+    id: 'melanotan-2',
+    name: 'Melanotan II',
+    category: 'Beauty',
+    blurb: 'Melanocortin agonist; tanning.',
+  },
+  {
+    id: 'mots-c',
+    name: 'MOTS-c',
+    category: 'Performance',
+    blurb: 'Mitochondrial peptide; metabolism.',
+  },
+  {
+    id: '5-amino-1mq',
+    name: '5-Amino-1MQ',
+    category: 'Performance',
+    blurb: 'NNMT inhibitor; metabolic support.',
+  },
 ];
 ```
 
 **`protocols.seed.ts`** — Muscle Growth stack (Tesa+Ipa, 8 weeks, 5×/week Mon–Fri):
+
 ```ts
 export const PROTOCOLS: Protocol[] = [
   {
@@ -345,8 +434,16 @@ export const PROTOCOLS: Protocol[] = [
     costPerWeek: 66,
     summary: 'Beginner · 8 weeks · ~$66/wk · 5× weekly',
     whyThisStack: [
-      { peptideId: 'tesamorelin', nickname: 'Night Builder', reason: 'Drives nighttime GH for recovery and lean mass.' },
-      { peptideId: 'ipamorelin', nickname: 'Morning Pulse', reason: 'A clean morning GH pulse without cortisol spikes.' },
+      {
+        peptideId: 'tesamorelin',
+        nickname: 'Night Builder',
+        reason: 'Drives nighttime GH for recovery and lean mass.',
+      },
+      {
+        peptideId: 'ipamorelin',
+        nickname: 'Morning Pulse',
+        reason: 'A clean morning GH pulse without cortisol spikes.',
+      },
     ],
     whatToExpect: [
       { range: 'Week 1', text: 'Adjusting; better sleep is common.' },
@@ -363,8 +460,20 @@ export const PROTOCOLS: Protocol[] = [
       { q: 'What if I miss a dose?', a: 'Skip it; do not double up. Resume next scheduled time.' },
     ],
     items: [
-      { peptideId: 'tesamorelin', doseMg: 1,   timeOfDay: '22:00', daysOfWeek: [1,2,3,4,5], nickname: 'Night Builder' },
-      { peptideId: 'ipamorelin',  doseMg: 0.1, timeOfDay: '07:00', daysOfWeek: [1,2,3,4,5], nickname: 'Morning Pulse' },
+      {
+        peptideId: 'tesamorelin',
+        doseMg: 1,
+        timeOfDay: '22:00',
+        daysOfWeek: [1, 2, 3, 4, 5],
+        nickname: 'Night Builder',
+      },
+      {
+        peptideId: 'ipamorelin',
+        doseMg: 0.1,
+        timeOfDay: '07:00',
+        daysOfWeek: [1, 2, 3, 4, 5],
+        nickname: 'Morning Pulse',
+      },
     ],
   },
 ];
@@ -379,43 +488,59 @@ Dark, premium, mobile-first. Deep navy → indigo, amber primary CTA.
 ```css
 :root {
   /* color */
-  --bg-0: #0b1020;          /* deepest navy */
-  --bg-1: #121a33;          /* card base */
-  --bg-2: #1b2547;          /* raised */
+  --bg-0: #0b1020; /* deepest navy */
+  --bg-1: #121a33; /* card base */
+  --bg-2: #1b2547; /* raised */
   --grad-hero: linear-gradient(160deg, #0b1020 0%, #1a1f4d 55%, #2a2170 100%);
-  --indigo: #5b6cff;        /* secondary */
+  --indigo: #5b6cff; /* secondary */
   --indigo-600: #4453e0;
-  --amber: #ff9f43;         /* primary CTA */
+  --amber: #ff9f43; /* primary CTA */
   --amber-600: #f08a1d;
-  --text-0: #f5f7ff;        /* primary text */
-  --text-1: #b9c0e0;        /* secondary text */
-  --text-2: #7e87b0;        /* muted */
+  --text-0: #f5f7ff; /* primary text */
+  --text-1: #b9c0e0; /* secondary text */
+  --text-2: #7e87b0; /* muted */
   --ok: #34d399;
   --warn: #fbbf24;
   --danger: #f87171;
-  --border: rgba(255,255,255,0.08);
-  --glass: rgba(255,255,255,0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --glass: rgba(255, 255, 255, 0.04);
 
   /* radius / shadow */
-  --r-sm: 8px; --r-md: 14px; --r-lg: 22px; --r-pill: 999px;
-  --shadow-card: 0 8px 30px rgba(0,0,0,0.35);
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-pill: 999px;
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.35);
 
   /* spacing scale (4px base) */
-  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px;
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
 
   /* type */
   --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Georgia', 'Times New Roman', serif;
   --t-display: clamp(28px, 7vw, 40px);
-  --t-h1: 24px; --t-h2: 20px; --t-body: 16px; --t-sm: 14px; --t-xs: 12px;
+  --t-h1: 24px;
+  --t-h2: 20px;
+  --t-body: 16px;
+  --t-sm: 14px;
+  --t-xs: 12px;
 
   /* layout */
-  --app-max: 480px;         /* mobile-first column */
+  --app-max: 480px; /* mobile-first column */
   --tabbar-h: 64px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 ```
 
@@ -438,4 +563,7 @@ Dark, premium, mobile-first. Deep navy → indigo, amber primary CTA.
 - **Routing:** routes — `/onboarding/*`, `/get-started`, `/goals`, `/goal/:goalId`, `/protocol/:protocolId`, `/protocol/:protocolId/start`, `/` (Home), `/reconstitute`, `/reconstitute/calc/:peptideId`, `/reconstitute/guide/:peptideId`, `/explore`, `/explore/peptide/:peptideId`. Bottom tabs: Home `/`, Explore `/explore`, Reconstitute `/reconstitute`.
 - **Commits:** small, conventional (`feat:`, `test:`, `chore:`, `docs:`). Commit after each green step.
 - **Definition of Done (every feature):** unit/integration tests pass in CI, lint/format clean, no console errors, works offline, matches captured flow, documented in README.
+
+```
+
 ```

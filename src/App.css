@@ -1,0 +1,18 @@
+.app {
+  min-height: 100%;
+}
+
+.app__main {
+  padding: var(--s-5) var(--s-4);
+  padding-bottom: calc(var(--tabbar-h) + var(--s-5));
+}
+
+.app__main h1 {
+  font-family: var(--font-display);
+  font-size: var(--t-h1);
+  margin-bottom: var(--s-3);
+}
+
+.app__main p {
+  color: var(--text-1);
+}

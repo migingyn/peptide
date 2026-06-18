@@ -13,12 +13,14 @@
 ## Task 1 — `START_PROTOCOL` reducer case (STRICT TDD)
 
 **Files:**
+
 - `src/state/reducer.test.ts` (extend)
 - `src/state/reducer.ts` (extend)
 
 Contract (Foundations §6): `{ type: 'START_PROTOCOL'; payload: { protocolId: string; startDate: string } }`. Creates a `UserProtocol` (Foundations §4) `{ id, protocolId, startDate, active: true }`, **deactivating any prior active one**.
 
 1. - [ ] **Write failing test: starts a protocol.** Append to `src/state/reducer.test.ts`:
+
    ```ts
    import { describe, it, expect } from 'vitest';
    import { reducer } from './reducer';
@@ -59,6 +61,7 @@ Contract (Foundations §6): `{ type: 'START_PROTOCOL'; payload: { protocolId: st
 2. - [ ] **Run, expect FAIL.** `npx vitest run src/state/reducer.test.ts` — fails (no `START_PROTOCOL` case yet).
 
 3. - [ ] **Minimal impl.** In `src/state/reducer.ts`, add the import for `id` and the case inside the `switch`:
+
    ```ts
    import { id } from '../lib/ids';
    // ...inside switch (action.type) {
@@ -85,12 +88,14 @@ Contract (Foundations §6): `{ type: 'START_PROTOCOL'; payload: { protocolId: st
 ## Task 2 — `LOG_DOSE` + `UNDO_DOSE` reducer cases (STRICT TDD)
 
 **Files:**
+
 - `src/state/reducer.test.ts` (extend)
 - `src/state/reducer.ts` (extend)
 
 Contract (Foundations §6): `{ type: 'LOG_DOSE'; payload: DoseLog }` appends; `{ type: 'UNDO_DOSE'; payload: { id: string } }` removes by id.
 
 1. - [ ] **Write failing test.** Append to `src/state/reducer.test.ts`:
+
    ```ts
    import type { DoseLog } from './types';
 
@@ -130,6 +135,7 @@ Contract (Foundations §6): `{ type: 'LOG_DOSE'; payload: DoseLog }` appends; `{
 2. - [ ] **Run, expect FAIL.** `npx vitest run src/state/reducer.test.ts`.
 
 3. - [ ] **Minimal impl.** Add two cases to the `switch` in `src/state/reducer.ts`:
+
    ```ts
      case 'LOG_DOSE':
        return { ...state, doseLogs: [...state.doseLogs, action.payload] };
@@ -150,10 +156,12 @@ Contract (Foundations §6): `{ type: 'LOG_DOSE'; payload: DoseLog }` appends; `{
 ## Task 3 — `lib/schedule.ts` pure dose-occurrence generator (STRICT TDD)
 
 **Files:**
+
 - `src/lib/schedule.test.ts` (new)
 - `src/lib/schedule.ts` (new)
 
 Signatures (define exactly):
+
 ```ts
 export interface DoseOccurrence {
   userProtocolId: string;
@@ -163,13 +171,22 @@ export interface DoseOccurrence {
   scheduledFor: string; /* ISO datetime */
   nickname?: string;
 }
-export function occurrencesForDay(userProtocol: UserProtocol, protocol: Protocol, day: Date): DoseOccurrence[];
-export function protocolWeek(userProtocol: UserProtocol, now: Date): { week: number; totalWeeks: number };
+export function occurrencesForDay(
+  userProtocol: UserProtocol,
+  protocol: Protocol,
+  day: Date,
+): DoseOccurrence[];
+export function protocolWeek(
+  userProtocol: UserProtocol,
+  now: Date,
+): { week: number; totalWeeks: number };
 export function isOccurrenceLogged(occ: DoseOccurrence, logs: DoseLog[]): DoseStatus | null;
 ```
+
 Rules: NEVER call `new Date()` inside `lib/`. Deterministic. `occurrencesForDay` filters `ProtocolItem.daysOfWeek` against `day.getDay()`, builds `scheduledFor` from `day` + `timeOfDay`, sorts by `timeOfDay` ascending. `isOccurrenceLogged` matches by `peptideId` + `scheduledFor`.
 
 1. - [ ] **Write failing test.** Create `src/lib/schedule.test.ts`:
+
    ```ts
    import { describe, it, expect } from 'vitest';
    import {
@@ -194,8 +211,20 @@ Rules: NEVER call `new Date()` inside `lib/`. Deterministic. `occurrencesForDay`
      importantToKnow: [],
      faq: [],
      items: [
-       { peptideId: 'tesamorelin', doseMg: 1, timeOfDay: '22:00', daysOfWeek: [1, 2, 3, 4, 5], nickname: 'Night Builder' },
-       { peptideId: 'ipamorelin', doseMg: 0.1, timeOfDay: '07:00', daysOfWeek: [1, 2, 3, 4, 5], nickname: 'Morning Pulse' },
+       {
+         peptideId: 'tesamorelin',
+         doseMg: 1,
+         timeOfDay: '22:00',
+         daysOfWeek: [1, 2, 3, 4, 5],
+         nickname: 'Night Builder',
+       },
+       {
+         peptideId: 'ipamorelin',
+         doseMg: 0.1,
+         timeOfDay: '07:00',
+         daysOfWeek: [1, 2, 3, 4, 5],
+         nickname: 'Morning Pulse',
+       },
      ],
    };
 
@@ -242,13 +271,22 @@ Rules: NEVER call `new Date()` inside `lib/`. Deterministic. `occurrencesForDay`
 
    describe('protocolWeek', () => {
      it('returns week 1 of 8 on the start date', () => {
-       expect(protocolWeek(USER_PROTOCOL, new Date(2026, 5, 17))).toEqual({ week: 1, totalWeeks: 8 });
+       expect(protocolWeek(USER_PROTOCOL, new Date(2026, 5, 17))).toEqual({
+         week: 1,
+         totalWeeks: 8,
+       });
      });
      it('returns week 2 of 8 eight days after start', () => {
-       expect(protocolWeek(USER_PROTOCOL, new Date(2026, 5, 25))).toEqual({ week: 2, totalWeeks: 8 });
+       expect(protocolWeek(USER_PROTOCOL, new Date(2026, 5, 25))).toEqual({
+         week: 2,
+         totalWeeks: 8,
+       });
      });
      it('clamps week to at least 1 before the start date', () => {
-       expect(protocolWeek(USER_PROTOCOL, new Date(2026, 5, 10))).toEqual({ week: 1, totalWeeks: 8 });
+       expect(protocolWeek(USER_PROTOCOL, new Date(2026, 5, 10))).toEqual({
+         week: 1,
+         totalWeeks: 8,
+       });
      });
    });
 
@@ -276,14 +314,9 @@ Rules: NEVER call `new Date()` inside `lib/`. Deterministic. `occurrencesForDay`
 2. - [ ] **Run, expect FAIL.** `npx vitest run src/lib/schedule.test.ts` — fails (module does not exist).
 
 3. - [ ] **Minimal impl.** Create `src/lib/schedule.ts`:
+
    ```ts
-   import type {
-     UserProtocol,
-     Protocol,
-     DoseLog,
-     DoseStatus,
-     DayOfWeek,
-   } from '../state/types';
+   import type { UserProtocol, Protocol, DoseLog, DoseStatus, DayOfWeek } from '../state/types';
 
    export interface DoseOccurrence {
      userProtocolId: string;
@@ -311,15 +344,7 @@ Rules: NEVER call `new Date()` inside `lib/`. Deterministic. `occurrencesForDay`
        .filter((item) => item.daysOfWeek.includes(dow))
        .map((item) => {
          const [h, m] = parseTime(item.timeOfDay);
-         const scheduled = new Date(
-           day.getFullYear(),
-           day.getMonth(),
-           day.getDate(),
-           h,
-           m,
-           0,
-           0,
-         );
+         const scheduled = new Date(day.getFullYear(), day.getMonth(), day.getDate(), h, m, 0, 0);
          return {
            userProtocolId: userProtocol.id,
            peptideId: item.peptideId,
@@ -354,10 +379,7 @@ Rules: NEVER call `new Date()` inside `lib/`. Deterministic. `occurrencesForDay`
    const TOTAL_WEEKS = 8;
 
    /** Status of a logged dose matching by peptideId + scheduledFor, else null. */
-   export function isOccurrenceLogged(
-     occ: DoseOccurrence,
-     logs: DoseLog[],
-   ): DoseStatus | null {
+   export function isOccurrenceLogged(occ: DoseOccurrence, logs: DoseLog[]): DoseStatus | null {
      const match = logs.find(
        (l) => l.peptideId === occ.peptideId && l.scheduledFor === occ.scheduledFor,
      );
@@ -376,11 +398,13 @@ Rules: NEVER call `new Date()` inside `lib/`. Deterministic. `occurrencesForDay`
 ## Task 4 — `ProgressRing` component
 
 **Files:**
+
 - `src/components/ProgressRing.tsx` (new)
 
 A pure SVG ring showing `value/max` progress with a center label. Respects `prefers-reduced-motion` via tokens.
 
 1. - [ ] **Create `ProgressRing.tsx`.**
+
    ```tsx
    interface ProgressRingProps {
      value: number; // current (e.g. week 1)
@@ -450,11 +474,13 @@ A pure SVG ring showing `value/max` progress with a center label. Respects `pref
 ## Task 5 — `EmptyState` component (create if absent)
 
 **Files:**
+
 - `src/components/EmptyState.tsx` (new — skip if it already exists from a prior sprint)
 
 1. - [ ] **Check existence.** `ls src/components/EmptyState.tsx` — if it exists and matches this shape, skip to Task 6.
 
 2. - [ ] **Create `EmptyState.tsx`.** Reuses `Button` from `src/components/Button.tsx`.
+
    ```tsx
    import type { ReactNode } from 'react';
    import { Button } from './Button';
@@ -483,9 +509,7 @@ A pure SVG ring showing `value/max` progress with a center label. Respects `pref
          {icon}
          <h2 style={{ color: 'var(--text-0)', fontSize: 'var(--t-h2)', margin: 0 }}>{title}</h2>
          {body ? <p style={{ margin: 0, color: 'var(--text-2)' }}>{body}</p> : null}
-         {actionLabel && onAction ? (
-           <Button onClick={onAction}>{actionLabel}</Button>
-         ) : null}
+         {actionLabel && onAction ? <Button onClick={onAction}>{actionLabel}</Button> : null}
        </div>
      );
    }
@@ -498,12 +522,14 @@ A pure SVG ring showing `value/max` progress with a center label. Respects `pref
 ## Task 6 — `Home` Dashboard view
 
 **Files:**
+
 - `src/features/home/Dashboard.tsx` (new)
 - `src/App.tsx` (wire route `/` to `<Dashboard />` — verify it is mounted)
 
 Reads `AppState` via `useAppState()`, computes today's occurrences from `lib/schedule.ts`, dispatches `LOG_DOSE`/`UNDO_DOSE`. Uses `new Date()` only here (a view), never in `lib/` (Foundations §10). Reuses `Card`, `Button`, `ProgressRing`, `EmptyState`. Draw units come from a matching reconstituted `Vial` (by `peptideId` + `doseMg`), else `"—"`.
 
 1. - [ ] **Create `Dashboard.tsx` — imports, helpers, week strip.**
+
    ```tsx
    import { useMemo, useState } from 'react';
    import { useNavigate } from 'react-router-dom';
@@ -553,6 +579,7 @@ Reads `AppState` via `useAppState()`, computes today's occurrences from `lib/sch
    ```
 
 2. - [ ] **Add the component body — active protocol + empty state.** Append to `Dashboard.tsx`:
+
    ```tsx
    export function Dashboard() {
      const state = useAppState();
@@ -626,6 +653,7 @@ Reads `AppState` via `useAppState()`, computes today's occurrences from `lib/sch
    ```
 
 3. - [ ] **Add the JSX return — ring, week strip, today's doses, upcoming, my peptides.** Continue inside `Dashboard`:
+
    ```tsx
      return (
        <main style={{ padding: 'var(--s-4)', display: 'flex', flexDirection: 'column', gap: 'var(--s-5)' }}>
@@ -752,10 +780,11 @@ Reads `AppState` via `useAppState()`, computes today's occurrences from `lib/sch
    ```
 
 4. - [ ] **Wire route `/`.** Confirm `src/App.tsx` renders `<Dashboard />` at path `/`. If it shows a placeholder from Sprint 0, replace the element:
+
    ```tsx
    import { Dashboard } from './features/home/Dashboard';
    // ...
-   <Route path="/" element={<Dashboard />} />
+   <Route path="/" element={<Dashboard />} />;
    ```
 
 5. - [ ] **Typecheck + lint.** `npx tsc --noEmit && npx eslint src/features/home/Dashboard.tsx src/components/ProgressRing.tsx src/components/EmptyState.tsx`.
@@ -767,11 +796,13 @@ Reads `AppState` via `useAppState()`, computes today's occurrences from `lib/sch
 ## Task 7 — Dashboard integration test: the check-off-a-dose flow (STRICT TDD)
 
 **Files:**
+
 - `src/features/home/Dashboard.test.tsx` (new)
 
 Render with a started protocol + reconstituted vials, check off a dose, assert it becomes 'taken' (the PRD's required integration test). Pin the clock with fake timers so the seeded Wednesday start day yields the two known occurrences.
 
 1. - [ ] **Write failing test.** Create `src/features/home/Dashboard.test.tsx`:
+
    ```tsx
    import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
    import { render, screen, within } from '@testing-library/react';
@@ -853,7 +884,7 @@ Render with a started protocol + reconstituted vials, check off a dose, assert i
        expect(screen.getByLabelText('Week 1/8')).toBeInTheDocument();
      });
 
-     it('renders both of today\'s doses with PRD dose + units', () => {
+     it("renders both of today's doses with PRD dose + units", () => {
        renderHome();
        expect(screen.getByText('Ipamorelin')).toBeInTheDocument();
        expect(screen.getByText('Tesamorelin')).toBeInTheDocument();
@@ -869,13 +900,17 @@ Render with a started protocol + reconstituted vials, check off a dose, assert i
        expect(checkbox.checked).toBe(false);
 
        await user.click(checkbox);
-       expect((screen.getByLabelText('Mark Ipamorelin as taken') as HTMLInputElement).checked).toBe(true);
+       expect((screen.getByLabelText('Mark Ipamorelin as taken') as HTMLInputElement).checked).toBe(
+         true,
+       );
 
        const card = screen.getByLabelText('Mark Ipamorelin as taken').closest('label')!;
        expect(within(card).getByText('Taken')).toBeInTheDocument();
 
        await user.click(screen.getByLabelText('Mark Ipamorelin as taken'));
-       expect((screen.getByLabelText('Mark Ipamorelin as taken') as HTMLInputElement).checked).toBe(false);
+       expect((screen.getByLabelText('Mark Ipamorelin as taken') as HTMLInputElement).checked).toBe(
+         false,
+       );
      });
    });
    ```
@@ -885,6 +920,7 @@ Render with a started protocol + reconstituted vials, check off a dose, assert i
 2. - [ ] **Run, expect FAIL.** `npx vitest run src/features/home/Dashboard.test.tsx` — fails until Task 6's Dashboard is wired (and provider accepts `initialState`).
 
 3. - [ ] **Make it pass.** If failing only on the provider `initialState` prop, add the optional prop to `AppStateProvider` in `src/state/store.tsx`:
+
    ```tsx
    export function AppStateProvider({
      children,
@@ -897,6 +933,7 @@ Render with a started protocol + reconstituted vials, check off a dose, assert i
      // ...existing context + persistence effect unchanged...
    }
    ```
+
    Otherwise the Dashboard from Task 6 already satisfies the assertions.
 
 4. - [ ] **Run, expect PASS.** `npx vitest run src/features/home/Dashboard.test.tsx`.
